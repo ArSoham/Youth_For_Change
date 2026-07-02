@@ -149,20 +149,15 @@ const TEAM_MEMBERS = [
   { name: "Sagar Budha", role: "Executive Member" },
 ];
 
-const GALLERY_PHOTOS = [
-  "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&h=800&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&h=600&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=600&h=400&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=800&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=500&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&h=500&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=700&fit=crop&auto=format",
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop&auto=format",
-];
+const galleryModules = import.meta.glob("../imports/gallery/*.jpeg", {
+  eager: true,
+}) as Record<string, { default: string }>;
+
+const GALLERY_PHOTOS = Object.entries(galleryModules)
+  .sort(([a], [b]) =>
+    a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
+  )
+  .map(([, mod]) => mod.default);
 
 // ── Hooks ──────────────────────────────────────────────────────────────────
 function useFadeIn(threshold = 0.15) {
@@ -261,7 +256,7 @@ function Navbar({ onNav }: { onNav: (id: string) => void }) {
           <img
             src={logoSrc}
             alt="YFC Logo"
-            className="h-10 w-10 rounded-full object-cover shadow-md"
+            className="h-10 w-10 rounded-full object-contain bg-transparent shadow-none ring-0"
           />
           <div className="flex flex-col leading-tight">
             <span
@@ -417,7 +412,7 @@ function Hero({ onNav }: { onNav: (id: string) => void }) {
               <img
                 src={logoSrc}
                 alt="Youth For Change Logo"
-                className="relative w-48 h-48 md:w-72 md:h-72 rounded-full object-cover shadow-2xl"
+                className="relative w-48 h-48 md:w-72 md:h-72 rounded-full object-contain bg-transparent shadow-none"
               />
             </div>
           </div>
@@ -769,11 +764,11 @@ function Team() {
         {/* President card */}
         <div className="flex flex-col md:flex-row items-center gap-8 mb-16 bg-gradient-to-br from-[#1B3B6F] to-[#0d2347] rounded-3xl p-8 md:p-12 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-[#F5A623]/10 translate-x-1/3 -translate-y-1/3 pointer-events-none" />
-          <div className="flex-shrink-0 w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-[#F5A623] shadow-2xl relative z-10 bg-[#0d2347] flex items-center justify-center">
+          <div className="flex-shrink-0 w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden border-0 shadow-none relative z-10 bg-transparent flex items-center justify-center">
             <img
               src={logoSrc}
               alt={TEAM_PRESIDENT.name}
-              className="w-4/5 h-4/5 object-contain"
+              className="w-full h-full object-contain p-0"
               style={{ filter: "hue-rotate(0deg) brightness(1.1)" }}
             />
           </div>
@@ -824,11 +819,11 @@ function Team() {
                 key={member.name}
                 className="flex-shrink-0 w-44 bg-[#F7F7F5] rounded-2xl p-5 text-center border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
               >
-                <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-3 border-2 border-[#F5A623]/30 bg-[#1B3B6F] flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-3 border-0 bg-transparent flex items-center justify-center">
                   <img
                     src={logoSrc}
                     alt={member.name}
-                    className="w-4/5 h-4/5 object-contain"
+                    className="w-full h-full object-contain"
                     style={{ filter: `hue-rotate(${HUE_ROTATIONS[i % HUE_ROTATIONS.length]}deg)` }}
                   />
                 </div>
